@@ -15,30 +15,17 @@ var filter = require('gulp-filter');
 var mergeStream = require('merge-stream');
 
 var sources = [
-	//'./src/async-proxy-script-blob.js',
     './src/sub-worker-emulation-for-chrome.js ',
     './src/async-proxy-factory.js',
     './src/async-proxy-master.js',
     './src/async-proxy-slave.js',
-    './src/scripts-to-import-pool.js',
-    './src/dependency-workers/linked-list.js',
-    './src/dependency-workers/hash-map.js dependency-workers/js-builtin-hash-map.js',
-    './src/dependency-workers/dependency-workers-task.js',
-    './src/dependency-workers/dependency-workers.js',
-    './src/dependency-workers/dependency-workers-task-handle.js',
-    './src/dependency-workers/dependency-workers-internal-context.js',
-    './src/dependency-workers/wrapper-input-retreiver-base.js',
-    './src/dependency-workers/scheduler-task.js',
-    './src/dependency-workers/scheduler-wrapper-input-retreiver.js',
-    './src/dependency-workers/scheduler-dependency-workers.js'
+    './src/scripts-to-import-pool.js'
 ];
 
 var vendorsProd = [
-    './vendor/resource-scheduler.dev.js'
 ];
 
 var vendorsDebug = [
-    './vendor/resource-scheduler.dev.debug.js'
 ];
 
 var scriptsDebug = vendorsDebug.concat(sources);
@@ -48,8 +35,7 @@ function build(isDebug) {
     var browserified = browserify({
         entries: ['./src/async-proxy-exports.js'],
         paths: [
-            './src',
-            './src/dependency-workers'
+            './src'
         ],
         standalone: 'async-proxy',
         debug: isDebug

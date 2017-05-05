@@ -1,6 +1,3 @@
 {
-	"browserify": true,
-	"globals": {
-		"resourceScheduler": false
-	}
+	"browserify": true
 }
