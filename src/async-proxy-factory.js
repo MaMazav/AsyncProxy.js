@@ -9,24 +9,20 @@ var AsyncProxyFactory = (function AsyncProxyFactoryClosure() {
 		if ((!scriptsToImport) || !(scriptsToImport.length)) {
 			throw 'AsyncProxyFactory error: missing scriptsToImport (2nd argument)';
 		}
-		if (!methods) {
-			throw 'AsyncProxyFactory error: missing methods (3rd argument)';
-		}
 		
 		var ProxyClass = proxyCtor || function() {
-			var that = this;
-			this.__workerHelperCtorArgs = convertArgs(arguments);
+			var ctorArgs = factorySingleton.convertArgs(arguments);
+			factorySingleton.initialize(this, scriptsToImport, ctorName, ctorArgs);
 		};
 		
-		ProxyClass.prototype._getWorkerHelper = function getWorkerHelper() {
-			if (!this.__workerHelper) {
-				this.__workerHelper = new AsyncProxyMaster(
-					scriptsToImport, ctorName, this.__workerHelperCtorArgs || []);
-			}
-			
-			return this.__workerHelper;
-		};
+		if (methods) {
+			factorySingleton.addMethods(ProxyClass, methods);
+		}
 		
+		return ProxyClass;
+	};
+	
+	factorySingleton.addMethods = function addMethods(ProxyClass, methods) {
 		for (var methodName in methods) {
 			generateMethod(ProxyClass, methodName, methods[methodName] || []);
 		}
@@ -35,14 +31,9 @@ var AsyncProxyFactory = (function AsyncProxyFactoryClosure() {
 	};
 	
 	function generateMethod(ProxyClass, methodName, methodArgsDescription) {
-		if (typeof methodArgsDescription === 'function') {
-			ProxyClass.prototype[methodName] = methodArgsDescription;
-			return;
-		}
-		
 		var methodOptions = methodArgsDescription[0] || {};
 		ProxyClass.prototype[methodName] = function generatedFunction() {
-			var workerHelper = this._getWorkerHelper();
+			var workerHelper = factorySingleton.getWorkerHelper(this);
 			var argsToSend = [];
 			for (var i = 0; i < arguments.length; ++i) {
 				var argDescription = methodArgsDescription[i + 1];
@@ -63,15 +54,41 @@ var AsyncProxyFactory = (function AsyncProxyFactoryClosure() {
 		};
 	}
 	
-	function convertArgs(argsObject) {
+	factorySingleton.initialize = function initialize(proxyInstance, scriptsToImport, ctorName, ctorArgs) {
+		if (proxyInstance.__workerHelperInitArgs) {
+			throw 'asyncProxy error: Double initialization of AsyncProxy master';
+		}
+		proxyInstance.__workerHelperInitArgs = {
+			scriptsToImport: scriptsToImport,
+			ctorName: ctorName,
+			ctorArgs: ctorArgs
+		};
+	};
+	
+	factorySingleton.convertArgs = function convertArgs(argsObject) {
 		var args = new Array(argsObject.length);
 		for (var i = 0; i < argsObject.length; ++i) {
 			args[i] = argsObject[i];
 		}
 		
 		return args;
-	}
+	};
     
+	factorySingleton.getWorkerHelper = function getWorkerHelper(proxyInstance) {
+		if (!proxyInstance.__workerHelper) {
+			if (!proxyInstance.__workerHelperInitArgs) {
+				throw 'asyncProxy error: asyncProxyFactory.initialize() not called yet';
+			}
+			
+			proxyInstance.__workerHelper = new AsyncProxyMaster(
+				proxyInstance.__workerHelperInitArgs.scriptsToImport,
+				proxyInstance.__workerHelperInitArgs.ctorName,
+				proxyInstance.__workerHelperInitArgs.ctorArgs || []);
+		}
+		
+		return proxyInstance.__workerHelper;
+	};
+
     return factorySingleton;
 })();
 
