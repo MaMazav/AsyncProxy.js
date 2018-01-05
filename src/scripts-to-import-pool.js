@@ -1,9 +1,9 @@
 'use strict';
 
 var ScriptsToImportPool = (function ScriptsToImportPoolClosure() {
-	var currentStackFrameRegex = /at (|[^ ]+ \()([^ ]+):\d+:\d+/;
-	var lastStackFrameRegexWithStrudel = new RegExp(/.+@(.*?):\d+:\d+/);
-	var lastStackFrameRegex = new RegExp(/.+\/(.*?):\d+(:\d+)*$/);
+    var currentStackFrameRegex = /at (|[^ ]+ \()([^ ]+):\d+:\d+/;
+    var lastStackFrameRegexWithStrudel = new RegExp(/.+@(.*?):\d+:\d+/);
+    var lastStackFrameRegex = new RegExp(/.+\/(.*?):\d+(:\d+)*$/);
 
     function ScriptsToImportPool() {
         var that = this;
@@ -44,9 +44,9 @@ var ScriptsToImportPool = (function ScriptsToImportPoolClosure() {
         }
 
         source = lastStackFrameRegexWithStrudel.exec(stack);
-		if (source && (source[1] !== "")) {
-			return source[1];
-		}
+        if (source && (source[1] !== "")) {
+            return source[1];
+        }
         
         source = lastStackFrameRegex.exec(stack);
         if (source && source[1] !== "") {

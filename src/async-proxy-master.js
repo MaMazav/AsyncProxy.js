@@ -82,14 +82,14 @@ var AsyncProxyMaster = (function AsyncProxyMasterClosure() {
         
         var sendMessageFunction = options.isSendImmediately ?
             sendMessageToSlave: enqueueMessageToSlave;
-		
-		var transferables;
-		if (typeof transferablesArg === 'function') {
-			transferables = transferablesArg();
-		} else {
-			transferables = AsyncProxyMaster._extractTransferables(
-				transferablesArg, args);
-		}
+        
+        var transferables;
+        if (typeof transferablesArg === 'function') {
+            transferables = transferablesArg();
+        } else {
+            transferables = AsyncProxyMaster._extractTransferables(
+                transferablesArg, args);
+        }
         
         sendMessageFunction(this, transferables, /*isFunctionCall=*/true, {
             functionToCall: functionToCall,
@@ -149,10 +149,10 @@ var AsyncProxyMaster = (function AsyncProxyMasterClosure() {
 
         masterEntryUrl = newUrl;
     };
-	
-	AsyncProxyMaster._extractTransferables = function extractTransferables(
-			pathsToTransferables, pathsBase) {
-		
+    
+    AsyncProxyMaster._extractTransferables = function extractTransferables(
+            pathsToTransferables, pathsBase) {
+        
         if (pathsToTransferables === undefined) {
             return undefined;
         }
@@ -175,19 +175,19 @@ var AsyncProxyMaster = (function AsyncProxyMasterClosure() {
     };
     
     // Private functions
-	
-	function getScriptName() {
+    
+    function getScriptName() {
         var error = new Error();
-		return ScriptsToImportPool._getScriptName(error);
-	}
+        return ScriptsToImportPool._getScriptName(error);
+    }
     
     function mainSlaveScriptContent() {
-		// This function is not run directly: It copied as a string into a blob
-		// and run in the Web Worker global scope
-		
-		/* global importScripts: false */
+        // This function is not run directly: It copied as a string into a blob
+        // and run in the Web Worker global scope
+        
+        /* global importScripts: false */
         importScripts('SCRIPT_PLACEHOLDER');
-		/* global asyncProxy: false */
+        /* global asyncProxy: false */
         asyncProxy.AsyncProxySlave._initializeSlave();
     }
     

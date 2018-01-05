@@ -43,8 +43,8 @@ var AsyncProxySlave = (function AsyncProxySlaveClosure() {
         
         var promiseThen = promise.then(function sendPromiseToMaster(result) {
             var transferables =
-				AsyncProxyMaster._extractTransferables(
-					pathsToTransferables, result);
+                AsyncProxyMaster._extractTransferables(
+                    pathsToTransferables, result);
             
             self.postMessage(
                 {
@@ -78,20 +78,20 @@ var AsyncProxySlave = (function AsyncProxySlaveClosure() {
             var argumentsAsArray = getArgumentsAsArray(arguments);
             
             if (beforeOperationListener !== null) {
-				try {
-					beforeOperationListener.call(
-						slaveSideMainInstance,
-						'callback',
-						callbackHandle.callbackName,
-						argumentsAsArray);
-				} catch (e) {
-					console.log('AsyncProxySlave.beforeOperationListener has thrown an exception: ' + e);
-				}
+                try {
+                    beforeOperationListener.call(
+                        slaveSideMainInstance,
+                        'callback',
+                        callbackHandle.callbackName,
+                        argumentsAsArray);
+                } catch (e) {
+                    console.log('AsyncProxySlave.beforeOperationListener has thrown an exception: ' + e);
+                }
             }
             
             var transferables =
-				AsyncProxyMaster._extractTransferables(
-					callbackHandle.pathsToTransferables, argumentsAsArray);
+                AsyncProxyMaster._extractTransferables(
+                    callbackHandle.pathsToTransferables, argumentsAsArray);
             
             self.postMessage({
                     type: 'callback',
@@ -126,7 +126,7 @@ var AsyncProxySlave = (function AsyncProxySlaveClosure() {
                 ctorName = event.data.ctorName;
                 
                 for (var i = 0; i < scriptsToImport.length; ++i) {
-					/* global importScripts: false */
+                    /* global importScripts: false */
                     importScripts(scriptsToImport[i]);
                 }
                 
@@ -163,7 +163,7 @@ var AsyncProxySlave = (function AsyncProxySlaveClosure() {
             if (functionToCall) {
                 break;
             }
-			/* jshint proto: true */
+            /* jshint proto: true */
             functionContainer = functionContainer.__proto__;
         }
         
