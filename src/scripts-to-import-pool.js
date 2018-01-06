@@ -57,7 +57,7 @@ var ScriptsToImportPool = (function ScriptsToImportPoolClosure() {
             return errorWithStackTrace.fileName;
         }
         
-        throw 'ImageDecoderFramework.js: Could not get current script URL';
+        throw 'async-proxy.js: Could not get current script URL';
     };
     
     return ScriptsToImportPool;
